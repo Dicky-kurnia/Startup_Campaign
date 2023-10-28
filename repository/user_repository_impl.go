@@ -25,10 +25,9 @@ func (repository *userRepository) Save(user model.User) (model.User, error) {
 func (repository *userRepository) FindByEmail(email string) (model.User, error) {
 	var user model.User
 
-	err := repository.db.Where("email: ?", email).Find(&user).Error
+	err := repository.db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err
 	}
-
 	return user, nil
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"bwastartup/model"
 	"bwastartup/repository"
+	"errors"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,4 +34,24 @@ func (service *serviceUser) RegisterUser(input model.RegisterUserInput) (model.U
 		return newUser, err
 	}
 	return newUser, nil
+}
+
+func (service *serviceUser) Login(input model.LoginInput) (model.User, error) {
+	email := input.Email
+	password := input.Password
+
+	user, err := service.repository.FindByEmail(email)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == 0 {
+		return user, errors.New("no user found on that email")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }
