@@ -55,3 +55,18 @@ func (service *serviceUser) Login(input model.LoginInput) (model.User, error) {
 	}
 	return user, nil
 }
+
+func (service *serviceUser) IsEmailEvailable(input model.CheckEmailInput) (bool, error) {
+	email := input.Email
+
+	user, err := service.repository.FindByEmail(email)
+	if err != nil {
+		return false, err
+	}
+
+	if user.ID == 0 {
+		return true, nil
+	}
+
+	return false, nil
+}
