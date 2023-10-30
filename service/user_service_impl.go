@@ -70,3 +70,18 @@ func (service *serviceUser) IsEmailEvailable(input model.CheckEmailInput) (bool,
 
 	return false, nil
 }
+
+func (service *serviceUser) SaveAvatar(ID int, fileLocation string) (model.User, error) {
+	user, err := service.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	user.AvatarFileName = fileLocation
+
+	updatedUser, err := service.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+	return updatedUser, nil
+}

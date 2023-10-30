@@ -27,12 +27,15 @@ func main() {
 	userService := service.NewServiceUser(userRepository)
 	userController := controller.NewUserController(userService)
 
+	userService.SaveAvatar(7, "image/dicky.PNG")
+
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
 	api.POST("/users", userController.RegisterUserController)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
+	api.POST("/avatars", userController.UploadAvatar)
 
 	router.Run()
 }
