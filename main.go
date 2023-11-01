@@ -3,6 +3,7 @@ package main
 import (
 	"bwastartup/config"
 	"bwastartup/controller"
+	"bwastartup/middleware"
 	"bwastartup/repository"
 	"bwastartup/service"
 	"fmt"
@@ -25,13 +26,13 @@ func main() {
 
 	userRepository := repository.NewUserRepository(mysql)
 	userService := service.NewServiceUser(userRepository)
-	userController := controller.NewUserController(userService)
-
-	userService.SaveAvatar(7, "image/dicky.PNG")
+	authService := middleware.NewAuthService()
+	userController := controller.NewUserController(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
+	//user
 	api.POST("/users", userController.RegisterUserController)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
